@@ -17,6 +17,7 @@ import { query, where, getDocs } from "firebase/firestore";
 import TotalPrice from "./TotalPrice";
 import { priceCollection } from "../../shared/fb";
 import Loading from "../Icons/Loading";
+import { BOOKING_DIALOG_ID } from "../Dialog/BookingDialog";
 type TabElementProps = {
   onClick: (tabIndex: number) => void;
   tabIndex: number;
@@ -61,7 +62,7 @@ export const TabContent = ({
   const [loadingPrice, setLoadingPrice] = useState(false);
   const getPrice = async (start: Date, end: Date) => {
     setLoadingPrice(true);
-    setTotalPrice(null)
+    setTotalPrice(null);
     const days = getDayList(start, end);
     let price = 0;
     let standardRateDays = 0;
@@ -235,8 +236,8 @@ export const TabContent = ({
               room.quantity === 0 ? "cursor-not-allowed" : "cursor-auto"
             }`}
           >
-            <button
-              disabled={room.quantity === 0}
+            <label
+              htmlFor={room.quantity === 0 ? "" : BOOKING_DIALOG_ID}
               className={`btn w-full ${
                 room.quantity === 0
                   ? "btn-ghost cursor-not-allowed text-gray-900"
@@ -244,7 +245,7 @@ export const TabContent = ({
               }`}
             >
               {room.quantity === 0 ? "Fully booked" : "Book Now!"}
-            </button>
+            </label>
           </div>
         </div>
       </div>

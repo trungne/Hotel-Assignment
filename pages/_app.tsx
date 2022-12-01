@@ -5,10 +5,10 @@ import { QUERY_CLIENT } from "../src/api";
 import "../shared/fb";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import isBetween from "dayjs/plugin/isBetween"
+import isBetween from "dayjs/plugin/isBetween";
 
-dayjs.extend(customParseFormat)
-dayjs.extend(isBetween)
+dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={QUERY_CLIENT}>

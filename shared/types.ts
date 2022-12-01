@@ -1,9 +1,13 @@
-export type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  thumbnail: string;
+export type BookingInfo = {
+  // user enters
+  name: string;
+  phone: string;
+  email: string;
+  // store in state
+  guests: number;
+  checkin: string;
+  checkout: string;
+  totalPrice: number;
 };
 
 export type Coordination = {
@@ -26,7 +30,7 @@ export type Room = {
 };
 
 export type PriceAdjust = {
-  day: string,
+  day: string;
   multiplier: number;
   roomType: RoomType;
 };

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import BookingDialog from "../components/Dialog/BookingDialog";
 
 export default function Document() {
   return (
@@ -16,6 +17,8 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+
+        <BookingDialog />
       </body>
     </Html>
   );
