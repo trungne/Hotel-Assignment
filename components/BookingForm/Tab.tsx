@@ -3,6 +3,7 @@ import {
   PriceAdjust,
   Room,
   snakeToCamel,
+  splitArrays,
   toTitle,
 } from "../../shared";
 import dayjs from "dayjs";
@@ -12,9 +13,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import Carousel from "./Carousel";
 import { UtilityNode } from "../../shared/UtilityNode";
-import { getDoc, doc, query, where, getDocs } from "firebase/firestore";
+import { query, where, getDocs } from "firebase/firestore";
 import TotalPrice from "./TotalPrice";
 import { priceCollection } from "../../shared/fb";
+import Loading from "../Icons/Loading";
 type TabElementProps = {
   onClick: (tabIndex: number) => void;
   tabIndex: number;
@@ -56,20 +58,27 @@ export const TabContent = ({
   const [endDate, setEndDate] = useState<Date | null>();
   // dayjs(new Date()).add(1, "day").toDate()
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
+  const [loadingPrice, setLoadingPrice] = useState(false);
   const getPrice = async (start: Date, end: Date) => {
+    setLoadingPrice(true);
+    setTotalPrice(null)
     const days = getDayList(start, end);
     let price = 0;
+    let standardRateDays = 0;
+    const arrays = splitArrays<string>(days, 10); // can only query 10 items at a time. Firebase sucks
 
-    days.slice()
-    const q = query(priceCollection, where("day", "in", days));
-    const docs = await getDocs(q);
+    for (const array of arrays) {
+      const q = query(priceCollection, where("day", "in", array));
+      const docs = await getDocs(q);
 
-    
-    docs.forEach((doc) => {
-      const priceAdjust = doc.data() as PriceAdjust;
-      price += room.rate * priceAdjust.multiplier;
-    });
-    setTotalPrice(price);
+      docs.forEach((doc) => {
+        const priceAdjust = doc.data() as PriceAdjust;
+        price += room.rate * priceAdjust.multiplier;
+      });
+      standardRateDays += array.length - docs.size; // calculate days without multiplier => for this we will use standard rate
+    }
+    setLoadingPrice(false);
+    setTotalPrice(price + standardRateDays * room.rate);
   };
 
   const onDatesChange = (dates: (Date | null)[]) => {
@@ -117,8 +126,8 @@ export const TabContent = ({
             thiết kế độc lập. Mỗi phòng đều có ban công hướng vườn…
           </span>
           <hr></hr>
-          <div className="flex justify-between">
-            <span>
+          <div className="flex items-center justify-between">
+            <div className="relative">
               <strong>Price</strong>:{" "}
               {totalPrice && startDate && endDate && (
                 <TotalPrice
@@ -126,12 +135,17 @@ export const TabContent = ({
                   price={totalPrice}
                 />
               )}
-            </span>
-            <span>
+              {loadingPrice && (
+                <div className="absolute top-[-5px] left-[60px]">
+                  <Loading />
+                </div>
+              )}
+            </div>
+            <div>
               <strong>Quantity</strong>:{" "}
               <span className="text-green-900">{room.quantity} </span>
               {room.quantity === 1 ? "room" : "rooms"}
-            </span>
+            </div>
           </div>
 
           <hr></hr>

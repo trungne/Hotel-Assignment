@@ -83,10 +83,16 @@ export const splitArrays = <T>(
   arr: Array<T>,
   spliceNumber: number
 ): Array<Array<T>> => {
-  let spliceIndex = spliceNumber;
+  if (spliceNumber === 0) {
+    return [];
+  }
+  let start = 0;
+  let end = spliceNumber;
   const res: Array<Array<T>> = [];
-  while(spliceIndex < arr.length){
-    
+  while (start < arr.length) {
+    res.push(arr.slice(start, end));
+    start = end;
+    end += spliceNumber;
   }
   return res;
 };
