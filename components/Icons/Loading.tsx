@@ -1,7 +1,7 @@
 const Loading = () => {
   return (
     <svg
-      className=" animate-spin-slow-1 animate-animate-spin mr-2 w-8 h-8 text-gray-200  dark:text-gray-600 fill-blue-600"
+      className=" animate-spin-slow-1 animate-animate-spin  w-8 h-8 text-gray-200  dark:text-gray-600 fill-blue-600"
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -276,7 +276,13 @@ export const TabContent = ({
             }`}
           >
             <label
-              htmlFor={canOpenDialog ? BOOKING_DIALOG_ID : WARNING_DIALOG_ID}
+              htmlFor={
+                room.quantity === 0
+                  ? ""
+                  : canOpenDialog
+                  ? BOOKING_DIALOG_ID
+                  : WARNING_DIALOG_ID
+              }
               className={`btn w-full ${
                 room.quantity === 0
                   ? "btn-ghost cursor-not-allowed text-gray-900"
