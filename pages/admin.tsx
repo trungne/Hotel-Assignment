@@ -102,6 +102,10 @@ const Home: NextPage = () => {
         JSON.stringify(newPriceAdjust)
       );
     });
+    setSuccessUpdateMultiplier(true);
+    setTimeout(() => {
+      setSuccessUpdateMultiplier(false);
+    }, 4000);
   };
 
   const updateRate = async () => {
@@ -128,6 +132,10 @@ const Home: NextPage = () => {
     );
     setIsUpdatingRate(false);
     newRateInputRef.current.value = "";
+    setSuccessUpdateRate(true);
+    setTimeout(() => {
+      setSuccessUpdateRate(false);
+    }, 4000);
   };
   return (
     <>
@@ -315,6 +323,26 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
+
+        {successUpdateRate && (
+          <div className="toast toast-top toast-end">
+            <div className="alert alert-success">
+              <div>
+                <span>Update standard rate successfully!</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {successUpdateMultiplier && (
+          <div className="toast toast-top toast-end">
+            <div className="alert alert-success">
+              <div>
+                <span>Update multiplier successfully!</span>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
