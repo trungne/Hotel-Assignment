@@ -34,6 +34,9 @@ const Home: NextPage = () => {
   const [currentPriceMultiplier, setCurrentPriceMultipler] = useState(100); // 100%
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
 
+  const [successUpdateMultiplier, setSuccessUpdateMultiplier] = useState(false);
+  const [successUpdateRate, setSuccessUpdateRate] = useState(false);
+
   const [priceDocs] = useCollection(
     query(
       priceCollection,
@@ -77,23 +80,27 @@ const Home: NextPage = () => {
     }
     const days: string[] = getDayList(startDate, endDate);
     const prices = priceDocs?.docs ?? [];
-
+    const currentRoom = rooms.docs[currentRoomIndex].data() as Room;
     days.forEach(async (day) => {
-      const newPriceAdject: PriceAdjust = {
+      const newPriceAdjust: PriceAdjust = {
         day,
         multiplier: currentPriceMultiplier / 100,
-        roomType: rooms.docs[currentRoomIndex].data().name,
+        roomType: currentRoom.name,
       };
 
       // update
       for (const price of prices) {
         const p = price.data() as PriceAdjust;
         if (p.day === day) {
-          await setDoc(doc(firestore, "priceAdjust", price.id), newPriceAdject);
+          await setDoc(doc(firestore, "priceAdjust", price.id), newPriceAdjust);
           return;
         }
       }
-      await addDoc(priceCollection, newPriceAdject);
+      await addDoc(priceCollection, newPriceAdjust);
+      localStorage.setItem(
+        `${currentRoom.name}-${day}`,
+        JSON.stringify(newPriceAdjust)
+      );
     });
   };
 
@@ -160,7 +167,7 @@ const Home: NextPage = () => {
                 Name: {snakeToCamel(rooms.docs[currentRoomIndex].data().name)}
               </div>
               <div>
-                Size: {rooms.docs[currentRoomIndex].data().size} meter squared
+                Size: {rooms.docs[currentRoomIndex].data().size} &#13217;
               </div>
               <div>
                 Quantity: {rooms.docs[currentRoomIndex].data().quantity}
@@ -170,7 +177,7 @@ const Home: NextPage = () => {
                 <span className="text-green-400">
                   {formatCurrency(rooms.docs[currentRoomIndex].data().rate)}
                 </span>{" "}
-                per day
+                / day
               </div>
             </div>
           )}
@@ -306,6 +313,9 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
+
+
+
     </>
   );
 };
