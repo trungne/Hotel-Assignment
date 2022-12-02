@@ -152,11 +152,15 @@ export const TabContent = ({
           </div>
 
           <hr></hr>
-          <span>
+          <span
+            style={{
+              display: "-webkit-box",
+              lineClamp: 4,
+            }}
+            className="clamp-text"
+          >
             {/* Description */}
-            Ngay trung tâm Khu Nghỉ Dưỡng, xen giữa khoảng không gian xanh mát
-            và cây cối bao la là năm tòa nhà ba tầng gồm 120 phòng Deluxe với
-            thiết kế độc lập. Mỗi phòng đều có ban công hướng vườn…
+            {room.description}
           </span>
           <hr></hr>
           <div className="flex items-center justify-between">

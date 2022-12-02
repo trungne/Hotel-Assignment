@@ -28,6 +28,7 @@ export type Room = {
   rate: number;
   photoList: string[];
   utilityList: Utility[];
+  description: string
 };
 
 export type PriceAdjust = {
