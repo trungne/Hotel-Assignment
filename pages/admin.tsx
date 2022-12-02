@@ -257,9 +257,11 @@ const Home: NextPage = () => {
             />
           </div>
           <div className="mx-auto max-w-[600px] text-center text-red">
+            <div className="italic text-sm my-2">
+              * The standard rate will be multiplier by this
+            </div>
             <div className="flex justify-center mb-4">
-              <div>Current Multiplier:</div>
-
+              <div>Multiplier:</div>
               <div
                 className="min-w-[50px]"
                 style={{
@@ -269,6 +271,7 @@ const Home: NextPage = () => {
                 {currentPriceMultiplier / 100}
               </div>
             </div>
+
             <input
               onChange={(e) => {
                 setCurrentPriceMultipler(
@@ -313,9 +316,6 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
-
-
-
     </>
   );
 };

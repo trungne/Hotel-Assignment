@@ -179,7 +179,6 @@ export const TabContent = ({
               <span className="text-green-900">{room.quantity} </span>
               {room.quantity === 1 ? "room" : "rooms"}
             </div>
-            s
           </div>
 
           <hr></hr>
