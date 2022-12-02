@@ -123,7 +123,6 @@ export const TabContent = ({
     <div className="flex gap-4 flex-col items-center max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto p-4 min-h-[650px]">
       <div className="flex gap-6 justify-center">
         {room.utilityList.map((utility, idx) => {
-          console.log(utility)
           return (
             <div
               key={idx}
@@ -209,10 +208,7 @@ export const TabContent = ({
               />
             </div>
 
-            <div
-              data-tip="within 30 days"
-              className="tooltip tooltip-left"
-            >
+            <div data-tip="within 30 days" className="tooltip tooltip-left">
               <button className="min-w-[80px] text-center">Check out</button>
             </div>
           </div>
@@ -228,7 +224,6 @@ export const TabContent = ({
                       return;
                     }
 
-                    console.log(e.currentTarget.value);
                     const guests = Number.parseInt(e.currentTarget.value);
                     setRoomInfo((prev) => {
                       return { ...prev, guests };
