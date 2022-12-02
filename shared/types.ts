@@ -4,6 +4,7 @@ export type BookingInfo = {
   phone: string;
   email: string;
   // store in state
+  rooms: number;
   guests: number;
   checkin: string;
   checkout: string;

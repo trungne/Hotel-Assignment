@@ -1,15 +1,12 @@
 import { useCallback, useState } from "react";
 import { Room, snakeToCamel } from "../../shared";
 import TabElement, { TabContent } from "./Tab";
-import {
-  useCollectionData,
-  useCollection,
-} from "react-firebase-hooks/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { roomCollection } from "../../shared/fb";
 
 const BookingForm = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
-  const [value, loading, error] = useCollection(roomCollection);
+  const [value] = useCollection(roomCollection);
   const changeTab = useCallback((tabIndex: number) => {
     setCurrentTabIndex(tabIndex);
   }, []);

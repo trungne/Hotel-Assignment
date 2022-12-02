@@ -96,3 +96,10 @@ export const splitArrays = <T>(
   }
   return res;
 };
+
+export const formatCurrency = (price: number) => {
+  return new Intl.NumberFormat("en", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+};

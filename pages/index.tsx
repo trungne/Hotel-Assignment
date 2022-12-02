@@ -1,37 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-
-import type { InferGetServerSidePropsType, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
-import { CiMapPin } from "react-icons/ci";
-import { GetServerSideProps } from "next";
-import { GetProductsResponse, getProducts } from "../src/api";
+
 import NavBar from "../components/NavBar";
-import Link from "next/link";
-import { BG_IMG, BG_IMG_2, GOOGLE_MAP_ADDRESS_LINK } from "../shared";
+import { BG_IMG, BG_IMG_2 } from "../shared";
 import BookingForm from "../components/BookingForm/BookingForm";
 import Banner from "../components/Banner";
 import Gallery from "../components/Gallery/Gallery";
 
-type ServerSideProps = {
-  getProductsResponse: GetProductsResponse;
-};
-
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
-  context
-) => {
-  const response = await getProducts();
-  return { props: { getProductsResponse: response } };
-};
-
-const Home: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ getProductsResponse }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-    initialData: getProductsResponse,
-  });
-
+const Home: NextPage = () => {
   return (
     <>
       <Head>

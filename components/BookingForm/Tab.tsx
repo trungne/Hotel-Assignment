@@ -1,4 +1,5 @@
 import {
+  DATE_FORMAT,
   getDayList,
   PriceAdjust,
   Room,
@@ -18,6 +19,11 @@ import TotalPrice from "./TotalPrice";
 import { priceCollection } from "../../shared/fb";
 import Loading from "../Icons/Loading";
 import { BOOKING_DIALOG_ID } from "../Dialog/BookingDialog";
+
+import { useAtom } from "jotai";
+import { roomAtom } from "../../shared/atoms";
+import { WARNING_DIALOG_ID } from "../Dialog/WarningDialog";
+
 type TabElementProps = {
   onClick: (tabIndex: number) => void;
   tabIndex: number;
@@ -55,13 +61,20 @@ export const TabContent = ({
   currentTabIndex,
   room,
 }: TabContentProps) => {
+  // atoms
+  const [_, setRoomInfo] = useAtom(roomAtom);
+
+  // states
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>();
-  // dayjs(new Date()).add(1, "day").toDate()
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
-  const [loadingPrice, setLoadingPrice] = useState(false);
+  const [isLoadingPrice, setIsLoadingPrice] = useState(false);
+
+  const canOpenDialog =
+    startDate && endDate && totalPrice !== null && room.quantity > 0;
+
   const getPrice = async (start: Date, end: Date) => {
-    setLoadingPrice(true);
+    setIsLoadingPrice(true);
     setTotalPrice(null);
     const days = getDayList(start, end);
     let price = 0;
@@ -78,8 +91,11 @@ export const TabContent = ({
       });
       standardRateDays += array.length - docs.size; // calculate days without multiplier => for this we will use standard rate
     }
-    setLoadingPrice(false);
-    setTotalPrice(price + standardRateDays * room.rate);
+
+    const totalPrice = price + standardRateDays * room.rate;
+    setIsLoadingPrice(false);
+    setTotalPrice(totalPrice);
+    setRoomInfo((prev) => ({ ...prev, totalPrice }));
   };
 
   const onDatesChange = (dates: (Date | null)[]) => {
@@ -88,6 +104,11 @@ export const TabContent = ({
     setEndDate(end);
     if (!!start && !!end) {
       getPrice(start, end);
+      setRoomInfo((prev) => ({
+        ...prev,
+        checkin: dayjs(start).format(DATE_FORMAT),
+        checkout: dayjs(end).format(DATE_FORMAT),
+      }));
     }
   };
 
@@ -136,7 +157,7 @@ export const TabContent = ({
                   price={totalPrice}
                 />
               )}
-              {loadingPrice && (
+              {isLoadingPrice && (
                 <div className="absolute top-[-5px] left-[60px]">
                   <Loading />
                 </div>
@@ -187,6 +208,17 @@ export const TabContent = ({
               <span>Guests</span>
               <div className="input-group">
                 <select
+                  onChange={(e) => {
+                    if (!e.currentTarget.value) {
+                      return;
+                    }
+
+                    console.log(e.currentTarget.value);
+                    const guests = Number.parseInt(e.currentTarget.value);
+                    setRoomInfo((prev) => {
+                      return { ...prev, guests };
+                    });
+                  }}
                   disabled={room.quantity === 0}
                   defaultValue={1}
                   className="select select-bordered bg-transparent"
@@ -209,6 +241,13 @@ export const TabContent = ({
               <span>Rooms</span>
               <div className="input-group ml-auto">
                 <select
+                  onClick={(e) => {
+                    if (!e.currentTarget.value) {
+                      return;
+                    }
+                    const rooms = Number.parseInt(e.currentTarget.value);
+                    setRoomInfo((prev) => ({ ...prev, rooms }));
+                  }}
                   disabled={room.quantity === 0}
                   defaultValue={1}
                   className="select !rounded-tl-lg !rounded-bl-lg !rounded-tr-none !rounded-br-none select-bordered bg-transparent ml-auto"
@@ -237,7 +276,7 @@ export const TabContent = ({
             }`}
           >
             <label
-              htmlFor={room.quantity === 0 ? "" : BOOKING_DIALOG_ID}
+              htmlFor={canOpenDialog ? BOOKING_DIALOG_ID : WARNING_DIALOG_ID}
               className={`btn w-full ${
                 room.quantity === 0
                   ? "btn-ghost cursor-not-allowed text-gray-900"

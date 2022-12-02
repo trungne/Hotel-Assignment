@@ -6,13 +6,18 @@ import "../shared/fb";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isBetween from "dayjs/plugin/isBetween";
+import { Provider } from "jotai";
+import BookingDialog from "../components/Dialog/BookingDialog";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={QUERY_CLIENT}>
-      <Component {...pageProps} />
+      <Provider>
+        <Component {...pageProps} />
+        <BookingDialog />
+      </Provider>
     </QueryClientProvider>
   );
 }
