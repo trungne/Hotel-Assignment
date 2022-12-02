@@ -84,12 +84,16 @@ export const TabContent = ({
     for (const array of arrays) {
       const q = query(priceCollection, where("day", "in", array));
       const docs = await getDocs(q);
+      const prices = docs.docs.filter(
+        (doc) => doc.data().roomType === room.name
+      );
 
-      docs.forEach((doc) => {
+      prices.forEach((doc) => {
         const priceAdjust = doc.data() as PriceAdjust;
+
         price += room.rate * priceAdjust.multiplier;
       });
-      standardRateDays += array.length - docs.size; // calculate days without multiplier => for this we will use standard rate
+      standardRateDays += array.length - prices.length; // calculate days without multiplier => for this we will use standard rate
     }
 
     const totalPrice = price + standardRateDays * room.rate;
@@ -119,6 +123,7 @@ export const TabContent = ({
     <div className="flex gap-4 flex-col items-center max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto p-4 min-h-[650px]">
       <div className="flex gap-6 justify-center">
         {room.utilityList.map((utility, idx) => {
+          console.log(utility)
           return (
             <div
               key={idx}
@@ -139,7 +144,14 @@ export const TabContent = ({
           <Carousel imageList={room.photoList} />
         </div>
         <div className="flex flex-col gap-5 flex-1">
-          <h1>{toTitle(snakeToCamel(room.name))} Room</h1>
+          <div className="flex">
+            <h1>{toTitle(snakeToCamel(room.name))} Room</h1>{" "}
+            <div className="ml-1 flex items-center text-base">
+              {" "}
+              - {room.size} &#13217;{" "}
+            </div>
+          </div>
+
           <hr></hr>
           <span>
             {/* Description */}
@@ -168,6 +180,7 @@ export const TabContent = ({
               <span className="text-green-900">{room.quantity} </span>
               {room.quantity === 1 ? "room" : "rooms"}
             </div>
+            s
           </div>
 
           <hr></hr>
@@ -176,29 +189,31 @@ export const TabContent = ({
               Check
               <br /> in
             </span>
+            <div className="w-full">
+              <DatePicker
+                wrapperClassName="!flex justify-center items-center 	 text-center bg-slate-700 rounded-lg"
+                calendarClassName=""
+                minDate={new Date()}
+                maxDate={dayjs().add(30, "day").toDate()}
+                disabled={room.quantity === 0}
+                className={`bg-transparent ${
+                  room.quantity === 0
+                    ? "text-gray-700 cursor-not-allowed"
+                    : "text-white"
+                }`}
+                selected={startDate}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={onDatesChange}
+                selectsRange
+              />
+            </div>
 
-            <DatePicker
-              wrapperClassName="!flex justify-center items-center 	 text-center bg-slate-700 rounded-lg"
-              calendarClassName=""
-              minDate={new Date()}
-              maxDate={dayjs().add(30, "day").toDate()}
-              disabled={room.quantity === 0}
-              className={`bg-transparent ${
-                room.quantity === 0
-                  ? "text-gray-700 cursor-not-allowed"
-                  : "text-white"
-              }`}
-              selected={startDate}
-              startDate={startDate}
-              endDate={endDate}
-              onChange={onDatesChange}
-              selectsRange
-            />
             <div
-              data-tip="We only accept booking within 30 days"
-              className="tooltip"
+              data-tip="within 30 days"
+              className="tooltip tooltip-left"
             >
-              <span className="min-w-[80px] text-center">Check out</span>
+              <button className="min-w-[80px] text-center">Check out</button>
             </div>
           </div>
           <hr></hr>

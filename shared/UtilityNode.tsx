@@ -27,6 +27,6 @@ export const UtilityNode: Record<Utility, ReactNode> = {
   Garden: <Flower className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
   View: <Eye className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
   Kitchen: <Stove className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
-  "Whole Apartment": <House className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
+  Apartment: <House className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
   Spacious: <HouseWithMeasures className={DEFAULT_SIZE} fill={DEFAULT_COLOR} />,
 };

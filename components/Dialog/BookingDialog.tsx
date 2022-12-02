@@ -4,14 +4,14 @@ import { readRoomAtom } from "../../shared/atoms";
 import type { BookingInfo } from "../../shared";
 import { useRef, useState } from "react";
 import Loading from "../Icons/Loading";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+
 export const BOOKING_DIALOG_ID = "booking-dialog";
 
 type InputStatus = "Uninitialized" | "Error" | "Good";
 const BookingDialog = () => {
   const [room] = useAtom(readRoomAtom);
-
-
-  
+  const [parent] = useAutoAnimate<HTMLDivElement>();
 
   const [name, setName] = useState<string>();
   const [nameInputStatus, setNameInputStatus] =

@@ -54,7 +54,7 @@ export type Utility =
   | "Garden"
   | "View"
   | "Kitchen"
-  | "Whole Apartment"
+  | "Apartment"
   | "Spacious";
 
 export type Hotel = {

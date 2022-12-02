@@ -19,7 +19,16 @@ const NavBar = () => {
             placeholder="search for room?"
             className="input input-bordered bg-white text-gray-700 placeholder-gray-700"
           />
-          <button className="btn btn-info">{<RxMagnifyingGlass />}</button>
+          <button
+            onClick={() => {
+              document
+                .querySelector("#booking")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="btn btn-info"
+          >
+            {<RxMagnifyingGlass />}
+          </button>
         </div>
       </div>
     </div>
